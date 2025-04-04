@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <title>IT-Платформа</title>
+    <style>
+      /* Глобальные стили для контроля размера SVG */
+      svg {
+        max-width: 48px !important;
+        max-height: 48px !important;
+        width: auto !important;
+        height: auto !important;
+      }
+      
+      /* Исключения для маленьких иконок */
+      button svg, .icon svg, .small-icon svg, .h-4, .w-4, .h-6, .w-6 {
+        max-width: 24px !important;
+        max-height: 24px !important;
+      }
+      
+      /* Размеры для конкретных социальных сетей */
+      svg[viewBox="0 0 24 24"], svg[viewBox="0 0 20 20"] {
+        max-width: 30px !important;
+        max-height: 30px !important;
+      }
+    </style>
+    <!-- Подключение шрифтов и других ресурсов -->
+  </head>
+  <body>
+    <noscript>
+      <strong>Извините, но IT-Платформа не работает без JavaScript. Пожалуйста, включите JavaScript в вашем браузере.</strong>
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+</html> 
