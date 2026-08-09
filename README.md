@@ -1,5 +1,7 @@
 # IT-Платформа
 
+**🚀 Live Application (Vercel):** [https://frontend-nine-nu-59.vercel.app](https://frontend-nine-nu-59.vercel.app)
+
 Веб-приложение для объединения IT-сообщества региона через удобный календарь событий, новости и систему мотивации.
 
 ## Особенности
