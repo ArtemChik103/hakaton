@@ -1,9 +1,9 @@
 # Node modules
-**/node_modules/
+/frontend/node_modules/
 node_modules/
 
 # Python
-**/__pycache__/
+__pycache__/
 *.py[cod]
 *$py.class
 *.so
@@ -28,9 +28,9 @@ wheels/
 # Django
 *.log
 local_settings.py
-**/db.sqlite3
-**/db.sqlite3-journal
-media/
+db.sqlite3
+db.sqlite3-journal
+media
 
 # Vue/JS/TS
 .env.local
@@ -41,8 +41,8 @@ yarn-error.log*
 .DS_Store
 
 # Editor directories and files
-.idea/
-.vscode/
+.idea
+.vscode
 *.suo
 *.ntvs*
 *.njsproj
@@ -54,7 +54,4 @@ yarn-error.log*
 .env.local
 .env.development.local
 .env.test.local
-.env.production.local
-
-# Screenshots
-Снимок экрана*.png 
+.env.production.local 
