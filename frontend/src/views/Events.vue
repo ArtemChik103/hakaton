@@ -1,396 +1,399 @@
 <template>
-  <div class="events-page">
-    <!-- Баннер -->
-    <div class="hero-section relative overflow-hidden mb-8 fade-in-down">
-      <div class="absolute top-0 right-0 w-1/2 h-full hidden lg:block">
-        <div class="h-full w-full bg-opacity-20 bg-white">
-          <div class="h-full w-full flex items-center justify-center">
-            <div class="transform -rotate-12 spin-slow">
-              <svg class="h-24 w-24 text-white opacity-10" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z" />
-              </svg>
-            </div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 pb-16 pt-4 text-left">
+    
+    <!-- Top Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-800 pb-6">
+      <div>
+        <div class="inline-flex items-center space-x-2 text-xs font-mono uppercase tracking-widest text-cyan-400 mb-1">
+          <span>⚡ Динамическая Самозагрузка</span>
+          <span>•</span>
+          <span class="text-emerald-400">Парсинг по URL и API</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-100">
+          Календарь IT-Событий
+        </h1>
+        <p class="text-slate-400 text-xs mt-1">
+          Мероприятия загружаются автоматически из сети. Вы также можете распарсить любое событие просто вставив его ссылку.
+        </p>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap items-center gap-2">
+        <button @click="showUrlModal = true" class="btn btn-primary text-xs px-4 py-2.5 flex items-center space-x-1.5">
+          <span>✨ Авто-парсер по URL</span>
+        </button>
+        <button @click="showAddModal = true" class="btn btn-secondary text-xs px-4 py-2.5">
+          ➕ Добавить новое событие
+        </button>
+      </div>
+    </div>
+
+    <!-- Regional Scope Switcher -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-slate-900/80 border border-cyan-500/30 p-2.5 rounded-2xl gap-3">
+      <div class="flex items-center space-x-2">
+        <span class="text-xs font-mono text-cyan-400 pl-2">Фильтр:</span>
+        <button 
+          @click="regionFilter = 'all'"
+          class="px-4 py-1.5 rounded-xl text-xs font-mono font-semibold transition-all border"
+          :class="regionFilter === 'all' ? 'bg-cyan-500 text-white border-cyan-400 shadow-md shadow-cyan-500/20' : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-slate-200'"
+        >
+          🌐 Все события и парсинг
+        </button>
+        <button 
+          @click="regionFilter = 'amur'"
+          class="px-4 py-1.5 rounded-xl text-xs font-mono font-semibold transition-all border"
+          :class="regionFilter === 'amur' ? 'bg-cyan-500 text-white border-cyan-400 shadow-md shadow-cyan-500/20' : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-slate-200'"
+        >
+          📍 Амурская область & ДФО
+        </button>
+      </div>
+      <span class="text-[11px] font-mono text-emerald-400">
+        Динамических событий в ленте: {{ events.length }}
+      </span>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="card-glass p-5 space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+        
+        <!-- Search Input -->
+        <div class="md:col-span-6">
+          <label class="form-label">Поиск по названию, источнику или тегу</label>
+          <div class="relative">
+            <input 
+              v-model="searchQuery" 
+              type="text" 
+              placeholder="Благовещенск, Python, GitHub, Leader-ID..." 
+              class="form-input pl-10"
+            />
+            <span class="absolute left-3.5 top-2.5 text-slate-500">🔍</span>
           </div>
         </div>
-      </div>
-      
-      <div class="relative z-10 px-6 py-12 lg:py-16 lg:px-8">
-        <div class="max-w-lg">
-          <h1 class="hero-title text-3xl font-bold text-white sm:text-4xl">
-            Календарь IT-мероприятий
-          </h1>
-          <p class="mt-4 text-lg text-blue-100">
-            Актуальный календарь IT-событий Амурской области. Найдите интересные мероприятия, 
-            хакатоны, встречи сообществ и конференции.
-          </p>
+
+        <!-- Event Type -->
+        <div class="md:col-span-4">
+          <label class="form-label">Тип мероприятия</label>
+          <select v-model="selectedType" class="form-input">
+            <option value="all">Все типы (Хакатоны, Митапы...)</option>
+            <option value="hackathon">🏆 Хакатоны</option>
+            <option value="meetup">🤝 Митапы</option>
+            <option value="conference">🎤 Конференции</option>
+          </select>
+        </div>
+
+        <!-- Reset Button -->
+        <div class="md:col-span-2 flex items-end">
+          <button @click="resetFilters" class="w-full btn btn-secondary py-2.5 text-xs">
+            Сбросить
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- Основной контент -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <!-- Левая колонка (на мобильных устройствах сверху) -->
-      <div class="lg:col-span-2 fade-in-up">
-        <!-- Календарь -->
-        <EventCalendar />
-      </div>
+    <!-- Grid View -->
+    <div class="space-y-6">
+      <div v-if="filteredEvents.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div 
+          v-for="event in filteredEvents" 
+          :key="event.id" 
+          class="card-glass card-interactive flex flex-col justify-between"
+        >
+          <div class="space-y-3">
+            <!-- Header Badges -->
+            <div class="flex items-center justify-between">
+              <span :class="getTypeBadgeClass(event.type)" class="badge">
+                {{ getEventTypeName(event.type) }}
+              </span>
+              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-800/50 truncate max-w-[140px]">
+                🔗 {{ event.sourceSite || 'Источник' }}
+              </span>
+            </div>
 
-      <!-- Правая колонка (на мобильных устройствах снизу) -->
-      <div>
-        <div class="sticky top-4 space-y-6 fade-in-right">
-          <!-- Ближайшие мероприятия -->
-          <div class="card p-6">
-            <h2 class="text-xl font-bold mb-4 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-primary-600" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
-              </svg>
-              Ближайшие мероприятия
-            </h2>
-            
-            <div v-if="upcomingEvents.length > 0" class="space-y-4 animate-list">
-              <div 
-                v-for="event in upcomingEvents" 
-                :key="event.id" 
-                class="event-item border-b border-gray-100 pb-4 last:border-0"
-              >
-                <div class="flex">
-                  <div class="w-16 text-center mr-4">
-                    <div class="event-date">
-                      <div class="text-sm">{{ getMonthAbbr(event.startDate) }}</div>
-                      <div class="text-xl font-bold">{{ getDayOfMonth(event.startDate) }}</div>
-                    </div>
-                  </div>
-                  <div class="flex-1">
-                    <h3 class="font-bold text-text-dark hover:text-primary-700 transition cursor-pointer" @click="openEventDetails(event)">
-                      {{ event.title }}
-                    </h3>
-                    <div class="flex items-center text-xs text-text-medium mb-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
-                      </svg>
-                      {{ formatTime(event.startDate) }} - {{ formatTime(event.endDate) }}
-                      
-                      <span class="mx-2">•</span>
-                      
-                      <span 
-                        :class="{
-                          'text-success': event.format === 'offline',
-                          'text-primary-600': event.format === 'online',
-                          'text-secondary-600': event.format === 'hybrid'
-                        }"
-                      >
-                        {{ getEventFormatText(event.format) }}
-                      </span>
-                      
-                      <span v-if="event.city" class="mx-2">•</span>
-                      <span v-if="event.city">{{ event.city }}</span>
-                    </div>
-                    
-                    <div class="flex gap-2 mt-2">
-                      <a 
-                        v-if="event.registrationLink" 
-                        :href="event.registrationLink" 
-                        target="_blank"
-                        class="btn btn-secondary text-white px-3 py-1 rounded text-xs font-medium pulse-on-hover"
-                      >
-                        Регистрация
-                      </a>
-                      <button 
-                        class="bg-gray-100 hover:bg-gray-200 text-text-medium px-3 py-1 rounded text-xs font-medium transition"
-                        @click="openEventDetails(event)"
-                      >
-                        Подробнее
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div v-else class="text-center py-4 text-text-medium">
-              Нет предстоящих событий
-            </div>
-          </div>
-          
-          <!-- Блок о сообществе -->
-          <div class="card p-6 hover-lift">
-            <h2 class="text-xl font-bold mb-4 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-primary-600" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
-              </svg>
-              IT-сообщество Амурской области
-            </h2>
-            <p class="text-text-medium mb-4">
-              Присоединяйтесь к сообществу IT-специалистов Амурской области. 
-              Общайтесь, делитесь опытом и находите новые возможности для профессионального роста.
+            <!-- Title -->
+            <h3 class="text-xl font-bold text-slate-100 hover:text-cyan-400 transition cursor-pointer" @click="openEventDetails(event)">
+              {{ event.title }}
+            </h3>
+
+            <!-- Description -->
+            <p class="text-xs text-slate-400 line-clamp-3 leading-relaxed">
+              {{ event.description }}
             </p>
-            <div class="flex flex-wrap gap-2">
-              <a href="#" class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm hover:bg-blue-200 transition hover-scale">Telegram</a>
-              <a href="#" class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm hover:bg-gray-200 transition hover-scale">ВКонтакте</a>
-              <a href="#" class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm hover:bg-purple-200 transition hover-scale">Discord</a>
+
+            <!-- Tags -->
+            <div v-if="event.tags" class="flex flex-wrap gap-1.5 pt-1">
+              <span v-for="tag in event.tags" :key="tag" class="px-2 py-0.5 rounded bg-slate-950 text-[10px] font-mono text-slate-400 border border-slate-800">
+                #{{ tag }}
+              </span>
             </div>
           </div>
-          
-          <!-- Теги -->
-          <div class="card p-6">
-            <h2 class="text-xl font-bold mb-4 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-primary-600" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
-              </svg>
-              Популярные теги
-            </h2>
-            <div class="flex flex-wrap gap-2">
+
+          <!-- Bottom Footer -->
+          <div class="pt-4 mt-4 border-t border-slate-800 space-y-3">
+            <div class="flex items-center justify-between text-xs font-mono">
+              <span class="text-slate-300">📅 {{ formatDate(event.startDate) }}</span>
+              <span v-if="event.prizePool" class="text-cyan-400 font-bold">
+                🏆 {{ event.prizePool }}
+              </span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <button @click="openEventDetails(event)" class="btn btn-secondary py-2 text-xs">
+                Подробнее
+              </button>
               <a 
-                v-for="tag in availableTags" 
-                :key="tag.id"
-                href="#" 
-                class="bg-gray-100 text-text-medium px-3 py-1 rounded-full text-sm hover:bg-primary-100 hover:text-primary-800 transition hover-scale"
+                :href="event.registrationLink" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                class="btn btn-primary py-2 text-xs flex items-center justify-center space-x-1"
               >
-                #{{ tag.name }}
+                <span>Перейти ↗</span>
               </a>
             </div>
           </div>
         </div>
       </div>
+
+      <div v-else class="card-glass p-12 text-center space-y-3">
+        <span class="text-4xl">🔍</span>
+        <h3 class="text-lg font-bold text-slate-200">Мероприятий не найдено</h3>
+        <p class="text-xs text-slate-400">Вы можете распарсить новое событие по ссылке через кнопку «Авто-парсер по URL».</p>
+        <button @click="showUrlModal = true" class="btn btn-primary text-xs px-4 py-2">✨ Распарсить по URL</button>
+      </div>
     </div>
 
-    <!-- Модальное окно с деталями события -->
-    <div v-if="selectedEvent" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div class="card bg-white p-6 w-full max-w-xl mx-4 relative bounce-in">
-        <button 
-          @click="selectedEvent = null" 
-          class="absolute top-4 right-4 text-text-medium hover:text-primary-600 transition"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
+    <!-- URL AUTO-PARSER MODAL -->
+    <div v-if="showUrlModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+      <div class="card-glass max-w-lg w-full border-cyan-500/40 space-y-6 relative animate-fadeIn">
+        <button @click="showUrlModal = false" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100 text-xl">
+          ✕
         </button>
-        
-        <div class="bg-primary-100 rounded-lg p-4 mb-6">
-          <h3 class="text-2xl font-bold mb-2">{{ selectedEvent.title }}</h3>
-          
-          <div class="flex flex-wrap gap-2 mb-2">
-            <div 
-              class="inline-block px-2 py-1 text-xs font-medium rounded" 
-              :class="getEventClassByType(selectedEvent.type, selectedEvent.format)"
-            >
-              {{ getEventTypeText(selectedEvent.type) }}
+
+        <div class="space-y-1">
+          <span class="badge badge-cyan">✨ ДИНАМИЧЕСКИЙ АВТО-ПАРСЕР</span>
+          <h3 class="text-xl font-bold text-slate-100">Импорт события по ссылке</h3>
+          <p class="text-xs text-slate-400">Вставьте любую ссылку на анонс хакатона или IT-мероприятия:</p>
+        </div>
+
+        <div class="space-y-3">
+          <input 
+            v-model="inputUrl" 
+            type="url" 
+            placeholder="https://leader-id.ru/events/... или https://hacks-ai.ru/" 
+            class="form-input"
+          />
+          <button @click="handleUrlParse" :disabled="parsing" class="w-full btn btn-primary py-3 text-sm flex items-center justify-center space-x-2">
+            <span v-if="parsing">⏳ Выполняем авто-парсинг страницы...</span>
+            <span v-else>⚡ Распарсить и добавить в ленту</span>
+          </button>
+        </div>
+
+        <div v-if="parseSuccess" class="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-xs text-emerald-400 font-mono text-center">
+          ✅ Событие успешно распарсено и добавлено в единый календарь!
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD EVENT MANUAL MODAL -->
+    <div v-if="showAddModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+      <div class="card-glass max-w-lg w-full border-slate-700 space-y-4 relative animate-fadeIn">
+        <button @click="showAddModal = false" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100 text-xl">
+          ✕
+        </button>
+
+        <h3 class="text-xl font-bold text-slate-100">Добавить мероприятие вручную</h3>
+
+        <form @submit.prevent="handleManualAdd" class="space-y-3">
+          <div>
+            <label class="form-label">Название мероприятия</label>
+            <input v-model="newEventForm.title" type="text" required placeholder="Например: AmurTech Hack" class="form-input text-xs" />
+          </div>
+          <div>
+            <label class="form-label">Прямая ссылка на регистрацию</label>
+            <input v-model="newEventForm.link" type="url" required placeholder="https://..." class="form-input text-xs" />
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="form-label">Город</label>
+              <input v-model="newEventForm.city" type="text" placeholder="Благовещенск" class="form-input text-xs" />
             </div>
-            
-            <div class="inline-block px-2 py-1 text-xs font-medium rounded bg-primary-100 text-primary-800">
-              {{ getEventFormatText(selectedEvent.format) }}
-            </div>
-            
-            <div v-if="selectedEvent.city" class="inline-block px-2 py-1 text-xs font-medium rounded bg-gray-100 text-text-medium">
-              {{ selectedEvent.city }}
+            <div>
+              <label class="form-label">Тип</label>
+              <select v-model="newEventForm.type" class="form-input text-xs">
+                <option value="hackathon">Хакатон</option>
+                <option value="meetup">Митап</option>
+                <option value="conference">Конференция</option>
+              </select>
             </div>
           </div>
-          
-          <div class="text-sm text-text-medium">
-            <div class="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
-              </svg>
-              {{ formatDate(selectedEvent.startDate) }} • {{ formatTime(selectedEvent.startDate) }} - {{ formatTime(selectedEvent.endDate) }}
-            </div>
+          <div>
+            <label class="form-label">Описание</label>
+            <textarea v-model="newEventForm.desc" rows="2" placeholder="Краткое описание события..." class="form-input text-xs"></textarea>
           </div>
+          <button type="submit" class="w-full btn btn-primary py-2.5 text-xs">
+            Сохранить в ленту
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- EVENT DETAIL MODAL -->
+    <div v-if="selectedEvent" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-y-auto">
+      <div class="card-glass max-w-2xl w-full border-slate-700 space-y-6 relative animate-fadeIn">
+        <button @click="selectedEvent = null" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100 text-xl">
+          ✕
+        </button>
+
+        <div class="space-y-2">
+          <div class="flex items-center space-x-2">
+            <span :class="getTypeBadgeClass(selectedEvent.type)" class="badge">
+              {{ getEventTypeName(selectedEvent.type) }}
+            </span>
+            <span class="badge badge-cyan">{{ selectedEvent.format.toUpperCase() }}</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-100">
+            {{ selectedEvent.title }}
+          </h2>
+          <p class="text-xs font-mono text-cyan-400">
+            Прямой URL: <a :href="selectedEvent.registrationLink" target="_blank" class="underline hover:text-cyan-300">{{ selectedEvent.registrationLink }} ↗</a>
+          </p>
         </div>
-        
-        <div class="mb-6">
-          <h4 class="text-lg font-semibold mb-2">Описание</h4>
-          <p class="text-text-medium whitespace-pre-line">{{ selectedEvent.description || 'Описание отсутствует' }}</p>
+
+        <div class="space-y-2 text-sm text-slate-300 leading-relaxed whitespace-pre-line border-t border-b border-slate-800 py-4">
+          {{ selectedEvent.description }}
         </div>
-        
-        <div v-if="selectedEvent.location" class="mb-6">
-          <h4 class="text-lg font-semibold mb-2">Место проведения</h4>
-          <p class="text-text-medium">{{ selectedEvent.location }}</p>
-        </div>
-        
-        <div class="flex flex-wrap gap-2">
-          <a 
-            v-if="selectedEvent.registrationLink" 
-            :href="selectedEvent.registrationLink" 
-            target="_blank"
-            class="btn btn-primary text-white px-5 py-2 rounded font-medium"
-          >
-            Зарегистрироваться
+
+        <div class="flex items-center justify-between">
+          <a :href="selectedEvent.registrationLink" target="_blank" rel="noopener noreferrer" class="btn btn-primary px-6 py-2.5 text-xs">
+            Перейти на сайт события ↗
           </a>
-          <button 
-            @click="selectedEvent = null" 
-            class="bg-gray-100 hover:bg-gray-200 text-text-medium px-5 py-2 rounded font-medium transition"
-          >
+          <button @click="selectedEvent = null" class="btn btn-secondary text-xs px-4 py-2">
             Закрыть
           </button>
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
 <script>
-import EventCalendar from '@/components/events/EventCalendar.vue'
+import api from '@/services/api';
+import { parseEventFromUrl, saveDynamicEvent } from '@/services/eventScraper';
 
 export default {
   name: 'EventsPage',
-  components: {
-    EventCalendar
-  },
   data() {
     return {
+      events: [],
+      regionFilter: 'all',
+      searchQuery: '',
+      selectedType: 'all',
       selectedEvent: null,
-      availableTags: [
-        { id: 1, name: 'Программирование' },
-        { id: 2, name: 'Дизайн' },
-        { id: 3, name: 'Стартапы' },
-        { id: 4, name: 'Искусственный интеллект' },
-        { id: 5, name: 'Веб-разработка' },
-        { id: 6, name: 'GameDev' },
-        { id: 7, name: 'Маркетинг' },
-        { id: 8, name: 'Образование' }
-      ],
-      events: [
-        {
-          id: 1,
-          title: 'Хакатон "Digital Breakthrough"',
-          description: 'Региональный этап хакатона по разработке цифровых решений для социальных проблем региона. Участники смогут предложить свои решения и получить ценные призы.\n\nНаправления хакатона:\n- Здравоохранение\n- Образование\n- Городская среда\n- Экология\n- Социальное обслуживание',
-          startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 15, 10, 0),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 15, 18, 0),
-          type: 'hackathon',
-          format: 'offline',
-          city: 'Благовещенск',
-          location: 'АмГУ, аудитория 103',
-          tags: [1, 4, 6],
-          registrationLink: 'https://example.com/register'
-        },
-        {
-          id: 2,
-          title: 'Мастер-класс по Python',
-          description: 'Основы программирования на Python для начинающих. Изучим базовые концепции и напишем простое приложение.\n\nПрограмма мастер-класса:\n1. Введение в Python\n2. Основные типы данных и операции\n3. Условные конструкции и циклы\n4. Функции и модули\n5. Разработка простого приложения',
-          startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 10, 12, 0),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 10, 14, 0),
-          type: 'workshop',
-          format: 'online',
-          city: '',
-          location: 'Zoom',
-          tags: [1, 5, 8],
-          registrationLink: 'https://example.com/register'
-        },
-        {
-          id: 3,
-          title: 'Встреча сообщества разработчиков',
-          description: 'Неформальная встреча IT-специалистов региона. Обсудим последние тренды и поделимся опытом.\n\nПлан встречи:\n- Знакомство новых участников\n- Обсуждение трендов в IT\n- Доклады участников (10-15 минут)\n- Свободное общение и нетворкинг',
-          startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 20, 18, 30),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 20, 21, 0),
-          type: 'meetup',
-          format: 'offline',
-          city: 'Благовещенск',
-          location: 'Коворкинг "Точка кипения"',
-          tags: [1, 3, 5],
-          registrationLink: ''
-        },
-        {
-          id: 4,
-          title: 'IT-конференция "Tech Innovations"',
-          description: 'Ежегодная конференция по инновациям в сфере IT. Выступления спикеров из ведущих компаний.',
-          startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 5, 9, 0),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 7, 18, 0),
-          type: 'conference',
-          format: 'hybrid',
-          city: 'Благовещенск',
-          location: 'Конференц-зал "Амур"',
-          tags: [3, 4, 7],
-          registrationLink: 'https://example.com/register'
-        }
-      ]
+      showUrlModal: false,
+      showAddModal: false,
+      inputUrl: '',
+      parsing: false,
+      parseSuccess: false,
+      newEventForm: {
+        title: '',
+        link: '',
+        city: 'Благовещенск',
+        type: 'hackathon',
+        desc: ''
+      }
     }
   },
   computed: {
-    upcomingEvents() {
-      const now = new Date();
-      // Сортируем события по дате и берем ближайшие 3
-      return this.events
-        .filter(event => event.startDate >= now)
-        .sort((a, b) => a.startDate - b.startDate)
-        .slice(0, 3);
+    filteredEvents() {
+      return this.events.filter(event => {
+        if (this.regionFilter === 'amur' && !event.isAmurRegion) return false;
+        if (this.selectedType !== 'all' && event.type !== this.selectedType) return false;
+        if (this.searchQuery) {
+          const q = this.searchQuery.toLowerCase();
+          const matchTitle = event.title.toLowerCase().includes(q);
+          const matchDesc = event.description.toLowerCase().includes(q);
+          const matchSource = event.sourceSite && event.sourceSite.toLowerCase().includes(q);
+          return matchTitle || matchDesc || matchSource;
+        }
+        return true;
+      });
     }
   },
+  async created() {
+    await this.loadEvents();
+  },
   methods: {
+    async loadEvents() {
+      this.events = await api.getEvents();
+    },
+    async handleUrlParse() {
+      if (!this.inputUrl) return;
+      this.parsing = true;
+      try {
+        await parseEventFromUrl(this.inputUrl);
+        this.parseSuccess = true;
+        await this.loadEvents();
+        setTimeout(() => {
+          this.parsing = false;
+          this.parseSuccess = false;
+          this.showUrlModal = false;
+          this.inputUrl = '';
+        }, 1200);
+      } catch (e) {
+        alert(e.message || 'Ошибка парсинга по указанной ссылке');
+        this.parsing = false;
+      }
+    },
+    async handleManualAdd() {
+      let domain = 'источник';
+      try {
+        domain = new URL(this.newEventForm.link).hostname.replace('www.', '');
+      } catch (e) {}
+
+      const customEvent = {
+        id: `manual-${Date.now()}`,
+        title: this.newEventForm.title,
+        slug: `manual-${Date.now()}`,
+        description: this.newEventForm.desc || 'Событие добавлено организатором.',
+        type: this.newEventForm.type,
+        format: 'offline',
+        city: this.newEventForm.city || 'Благовещенск',
+        location: 'Добавлено пользователем',
+        startDate: new Date(Date.now() + 5 * 86400000).toISOString(),
+        organizer: domain,
+        registrationLink: this.newEventForm.link,
+        sourceSite: domain,
+        isAmurRegion: this.newEventForm.city.toLowerCase().includes('благовещенск') || this.newEventForm.city.toLowerCase().includes('амур'),
+        isLiveParsed: true,
+        tags: ['Добавлено', this.newEventForm.city]
+      };
+
+      saveDynamicEvent(customEvent);
+      await this.loadEvents();
+      this.showAddModal = false;
+      this.newEventForm = { title: '', link: '', city: 'Благовещенск', type: 'hackathon', desc: '' };
+    },
     openEventDetails(event) {
       this.selectedEvent = event;
     },
-    getMonthAbbr(date) {
-      const months = ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'];
-      return months[date.getMonth()];
+    resetFilters() {
+      this.searchQuery = '';
+      this.selectedType = 'all';
+      this.regionFilter = 'all';
     },
-    getDayOfMonth(date) {
-      return date.getDate();
+    formatDate(dateObj) {
+      if (!dateObj) return '';
+      const date = new Date(dateObj);
+      return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
     },
-    formatDate(date) {
-      const options = { day: 'numeric', month: 'long', year: 'numeric' };
-      return date.toLocaleDateString('ru-RU', options);
+    getEventTypeName(type) {
+      const names = { hackathon: 'Хакатон', meetup: 'Митап', conference: 'Конференция' };
+      return names[type] || 'Событие';
     },
-    formatTime(date) {
-      return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-    },
-    getEventTypeText(type) {
-      const types = {
-        'hackathon': 'Хакатон',
-        'workshop': 'Мастер-класс',
-        'meetup': 'Встреча',
-        'conference': 'Конференция'
-      };
-      
-      return types[type] || 'Мероприятие';
-    },
-    getEventFormatText(format) {
-      const formats = {
-        'online': 'Онлайн',
-        'offline': 'Офлайн',
-        'hybrid': 'Гибридный'
-      };
-      
-      return formats[format] || '';
-    },
-    getEventClassByType(type, format) {
-      // Классы для разных типов событий
-      const typeClasses = {
-        'hackathon': 'bg-purple-100 text-purple-800',
-        'workshop': 'bg-blue-100 text-blue-800',
-        'meetup': 'bg-green-100 text-green-800',
-        'conference': 'bg-orange-100 text-orange-800'
-      };
-      
-      return typeClasses[type] || 'bg-gray-100 text-gray-800';
-    },
-    getTagNameById(tagId) {
-      const tag = this.availableTags.find(t => t.id === tagId);
-      return tag ? tag.name : '';
+    getTypeBadgeClass(type) {
+      const classes = { hackathon: 'badge-cyan', meetup: 'badge-indigo', conference: 'badge-emerald' };
+      return classes[type] || 'badge-cyan';
     }
   }
 }
 </script>
-
-<style scoped>
-/* Дополнительные стили для контроля размера SVG */
-svg {
-  max-width: 20px;
-  max-height: 20px;
-  width: auto;
-  height: auto;
-  display: inline-block;
-}
-
-/* Исключение для иконки в баннере */
-.h-24.w-24 {
-  max-width: 48px;
-  max-height: 48px;
-  width: 48px;
-  height: 48px;
-}
-
-/* Ограничение размеров для всех внешних ресурсов */
-img, object, embed {
-  max-width: 100%;
-  max-height: 100%;
-}
-</style>

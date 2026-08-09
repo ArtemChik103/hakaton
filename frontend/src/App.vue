@@ -1,9 +1,9 @@
 <template>
-  <div class="min-h-screen" style="background-color: var(--background-light)">
-    <Navbar ref="navbar" class="app-navbar" />
-    <main class="container mx-auto py-8 px-4">
+  <div class="min-h-screen bg-slate-950 text-slate-100 font-sans antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
+    <Navbar ref="navbar" />
+    <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <router-view v-slot="{ Component, route }">
-        <transition :name="route.meta.transition || 'page'" mode="out-in">
+        <transition name="fade" mode="out-in">
           <component :is="Component" :key="route.path" />
         </transition>
       </router-view>
@@ -23,23 +23,12 @@ export default {
     Footer
   },
   mounted() {
-    // Проверяем состояние аутентификации при монтировании компонента
     this.checkAuthState();
-    
-    // Добавляем обработчик события для роутера, чтобы проверять 
-    // состояние аутентификации при каждом переходе
-    this.$router.beforeEach((to, from, next) => {
-      console.log('Переход на новый маршрут:', to.path);
-      this.checkAuthState();
-      next();
-    });
   },
   methods: {
     checkAuthState() {
-      console.log('Проверка состояния аутентификации в App.vue');
       const userStr = localStorage.getItem('user');
       if (userStr && this.$refs.navbar) {
-        // Обновляем состояние в Navbar
         this.$refs.navbar.updateUserFromStorage();
       }
     }
@@ -48,41 +37,14 @@ export default {
 </script>
 
 <style>
-/* Переходы страниц */
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+  transform: translateY(8px);
 }
-
-.slide-enter-active,
-.slide-leave-active {
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.slide-enter-from {
-  transform: translateX(50px);
-  opacity: 0;
-}
-
-.slide-leave-to {
-  transform: translateX(-50px);
-  opacity: 0;
-}
-
-/* Стандартный переход страницы */
-.page-enter-active,
-.page-leave-active {
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.page-enter-from,
-.page-leave-to {
-  opacity: 0;
-  transform: translateY(20px);
-}
-</style> 
+</style>

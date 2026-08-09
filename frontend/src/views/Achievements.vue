@@ -1,274 +1,109 @@
 <template>
-  <div class="achievements-page">
-    <div class="mb-8 fade-in-down">
-      <h1 class="text-3xl font-bold mb-2">Достижения</h1>
-      <p class="text-text-medium">Система мотивации и достижений для активных участников IT-сообщества</p>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 pb-16 pt-4">
+    
+    <!-- Header -->
+    <div class="border-b border-slate-800 pb-6 text-left">
+      <div class="inline-flex items-center space-x-2 text-xs font-mono uppercase tracking-widest text-indigo-400 mb-1">
+        <span>🏆 Геймификация & XP</span>
+        <span>•</span>
+        <span>Рейтинг IT-Специалиста</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-100">
+        Система Достижений
+      </h1>
+      <p class="text-slate-400 text-sm mt-1">Участвуйте в мероприятиях, создавайте проекты и получайте бейджи активности</p>
     </div>
 
-    <!-- Баннер -->
-    <div class="hero-section relative overflow-hidden mb-8 fade-in-up">
-      <div class="absolute top-0 right-0 w-1/2 h-full hidden lg:block">
-        <div class="h-full w-full bg-opacity-20 bg-white">
-          <div class="h-full w-full flex items-center justify-center">
-            <div class="transform -rotate-12 spin-slow">
-              <svg class="h-24 w-24 text-white opacity-10" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h4c.55 0 1 .45 1 1v1h-6V9c0-.55.45-1 1-1zm6 11h-8v-5h8v5zm2-2c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm0-4c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z" />
-              </svg>
-            </div>
+    <!-- User XP Status Bar -->
+    <div class="card-glass bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border-indigo-500/30 p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center space-x-4">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-2xl font-bold text-white shadow-lg shadow-indigo-500/20">
+          Lvl 7
+        </div>
+        <div class="space-y-1 text-left">
+          <h3 class="text-lg font-bold text-slate-100">Александр Второв</h3>
+          <p class="text-xs font-mono text-cyan-400">Senior Fullstack Engineer • 2850 XP</p>
+          <div class="w-48 sm:w-64 bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
+            <div class="bg-gradient-to-r from-cyan-500 to-indigo-500 h-full w-[80%] rounded-full"></div>
           </div>
         </div>
       </div>
-      
-      <div class="relative z-10 px-6 py-12 lg:py-16 lg:px-8">
-        <div class="max-w-lg">
-          <h2 class="hero-title text-3xl font-bold text-white sm:text-4xl">
-            Система достижений
-          </h2>
-          <p class="mt-4 text-lg text-blue-100">
-            Получайте достижения за участие в мероприятиях, организацию событий 
-            и активность в сообществе. Развивайтесь и становитесь заметнее!
-          </p>
-        </div>
-      </div>
-    </div>
 
-    <!-- Ваш текущий уровень -->
-    <div class="card p-6 mb-8">
-      <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
-        <div class="relative">
-          <div class="w-32 h-32 bg-primary-100 rounded-full flex items-center justify-center text-primary-700 text-4xl glow-on-hover">
-            🏆
-          </div>
-          <div class="absolute -bottom-2 -right-2 bg-secondary-600 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold text-lg border-4 border-white">
-            2
-          </div>
+      <div class="flex items-center space-x-6 text-center">
+        <div>
+          <div class="text-2xl font-extrabold text-cyan-400 font-mono">4</div>
+          <div class="text-xs text-slate-400 font-mono">Разблокировано</div>
         </div>
-        
-        <div class="flex-1 text-center md:text-left">
-          <h3 class="text-2xl font-bold mb-2">Ваш текущий уровень: Начинающий</h3>
-          <p class="text-text-medium mb-4">
-            Вы в начале пути! Посещайте мероприятия и будьте активны, чтобы получать новые достижения и повышать свой уровень.
-          </p>
-          
-          <div class="mb-4">
-            <div class="flex justify-between mb-1">
-              <span class="text-sm font-medium">Прогресс до следующего уровня</span>
-              <span class="text-sm font-medium">30%</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-2.5">
-              <div class="bg-primary-600 h-2.5 rounded-full progress-animation" style="width: 30%"></div>
-            </div>
-          </div>
-          
-          <div class="flex gap-2">
-            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">450 XP</span>
-            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">2 мероприятия</span>
-            <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded-full">5 достижений</span>
-          </div>
+        <div class="w-px h-8 bg-slate-800"></div>
+        <div>
+          <div class="text-2xl font-extrabold text-indigo-400 font-mono">2250</div>
+          <div class="text-xs text-slate-400 font-mono">Заработано XP</div>
         </div>
       </div>
     </div>
 
-    <!-- Ваши достижения -->
-    <div class="mb-8">
-      <h2 class="text-xl font-bold mb-4">Ваши достижения</h2>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-list">
-        <div class="card p-6 hover-lift">
-          <div class="flex items-start">
-            <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 text-xl mr-4 flex-shrink-0">
-              👋
+    <!-- Achievements Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div 
+        v-for="item in achievements" 
+        :key="item.id"
+        class="card-glass flex flex-col justify-between transition-all"
+        :class="item.unlocked ? 'border-cyan-500/30 bg-slate-900/80' : 'opacity-60 border-slate-800/80'"
+      >
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl" :class="item.unlocked ? 'bg-cyan-500/10 border border-cyan-500/20' : 'bg-slate-950 border border-slate-800'">
+              {{ item.icon }}
             </div>
-            <div>
-              <h3 class="font-bold mb-1">Добро пожаловать!</h3>
-              <p class="text-text-medium text-sm mb-2">Зарегистрируйтесь на платформе</p>
-              <div class="text-xs text-success font-medium">Получено: 01.04.2025</div>
-            </div>
+            <span class="badge" :class="item.unlocked ? 'badge-emerald' : 'badge-amber'">
+              +{{ item.xp }} XP
+            </span>
+          </div>
+
+          <div class="space-y-1 text-left">
+            <h3 class="text-lg font-bold text-slate-100">
+              {{ item.title }}
+            </h3>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              {{ item.description }}
+            </p>
           </div>
         </div>
 
-        <div class="card p-6 hover-lift">
-          <div class="flex items-start">
-            <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 text-xl mr-4 flex-shrink-0">
-              🎯
-            </div>
-            <div>
-              <h3 class="font-bold mb-1">Первый шаг</h3>
-              <p class="text-text-medium text-sm mb-2">Посетите первое мероприятие</p>
-              <div class="text-xs text-success font-medium">Получено: 05.04.2025</div>
-            </div>
+        <!-- Progress Bar -->
+        <div class="pt-4 mt-4 border-t border-slate-800 space-y-2">
+          <div class="flex justify-between text-xs font-mono">
+            <span class="text-slate-400">Прогресс:</span>
+            <span :class="item.unlocked ? 'text-emerald-400 font-bold' : 'text-slate-300'">
+              {{ item.progress }} / {{ item.maxProgress }}
+            </span>
           </div>
-        </div>
-
-        <div class="card p-6 hover-lift">
-          <div class="flex items-start">
-            <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 text-xl mr-4 flex-shrink-0">
-              🔥
-            </div>
-            <div>
-              <h3 class="font-bold mb-1 text-gray-400">Активный участник</h3>
-              <p class="text-text-medium text-sm mb-2">Посетите 5 мероприятий</p>
-              <div class="text-xs text-text-medium font-medium">Прогресс: 2/5</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card p-6 hover-lift">
-          <div class="flex items-start">
-            <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 text-xl mr-4 flex-shrink-0">
-              🏆
-            </div>
-            <div>
-              <h3 class="font-bold mb-1 text-gray-400">Победитель</h3>
-              <p class="text-text-medium text-sm mb-2">Займите призовое место на хакатоне</p>
-              <div class="text-xs text-text-medium font-medium">Не получено</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card p-6 hover-lift">
-          <div class="flex items-start">
-            <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 text-xl mr-4 flex-shrink-0">
-              🎤
-            </div>
-            <div>
-              <h3 class="font-bold mb-1 text-gray-400">Спикер</h3>
-              <p class="text-text-medium text-sm mb-2">Выступите на мероприятии с докладом</p>
-              <div class="text-xs text-text-medium font-medium">Не получено</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card p-6 hover-lift">
-          <div class="flex items-start">
-            <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 text-xl mr-4 flex-shrink-0">
-              📝
-            </div>
-            <div>
-              <h3 class="font-bold mb-1">Заполните профиль</h3>
-              <p class="text-text-medium text-sm mb-2">Добавьте информацию о себе в профиль</p>
-              <div class="text-xs text-success font-medium">Получено: 01.04.2025</div>
-            </div>
+          <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
+            <div 
+              class="h-full rounded-full transition-all duration-500" 
+              :class="item.unlocked ? 'bg-emerald-500' : 'bg-amber-500/60'"
+              :style="{ width: `${(item.progress / item.maxProgress) * 100}%` }"
+            ></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Рейтинг участников -->
-    <div class="card p-6 fade-in-up delay-300">
-      <h2 class="text-xl font-bold mb-4">Рейтинг участников</h2>
-      
-      <div class="overflow-x-auto">
-        <table class="w-full text-left">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-4 py-3 text-sm font-medium text-text-medium">#</th>
-              <th class="px-4 py-3 text-sm font-medium text-text-medium">Участник</th>
-              <th class="px-4 py-3 text-sm font-medium text-text-medium">Уровень</th>
-              <th class="px-4 py-3 text-sm font-medium text-text-medium">Достижения</th>
-              <th class="px-4 py-3 text-sm font-medium text-text-medium">XP</th>
-            </tr>
-          </thead>
-          <tbody class="animate-list">
-            <tr class="border-b hover:bg-gray-50 transition">
-              <td class="px-4 py-3 text-sm">1</td>
-              <td class="px-4 py-3">
-                <div class="flex items-center">
-                  <div class="w-8 h-8 rounded-full bg-primary-100 mr-3"></div>
-                  <div>
-                    <div class="font-medium">Иванов Иван</div>
-                    <div class="text-xs text-text-medium">Разработчик</div>
-                  </div>
-                </div>
-              </td>
-              <td class="px-4 py-3 text-sm">Эксперт</td>
-              <td class="px-4 py-3 text-sm">15</td>
-              <td class="px-4 py-3 font-medium text-primary-600">1250</td>
-            </tr>
-            <tr class="border-b hover:bg-gray-50 transition">
-              <td class="px-4 py-3 text-sm">2</td>
-              <td class="px-4 py-3">
-                <div class="flex items-center">
-                  <div class="w-8 h-8 rounded-full bg-secondary-100 mr-3"></div>
-                  <div>
-                    <div class="font-medium">Петрова Елена</div>
-                    <div class="text-xs text-text-medium">Дизайнер</div>
-                  </div>
-                </div>
-              </td>
-              <td class="px-4 py-3 text-sm">Продвинутый</td>
-              <td class="px-4 py-3 text-sm">12</td>
-              <td class="px-4 py-3 font-medium text-primary-600">950</td>
-            </tr>
-            <tr class="border-b hover:bg-gray-50 transition bg-primary-50">
-              <td class="px-4 py-3 text-sm font-medium">3</td>
-              <td class="px-4 py-3">
-                <div class="flex items-center">
-                  <div class="w-8 h-8 rounded-full bg-blue-100 mr-3"></div>
-                  <div>
-                    <div class="font-medium">Вы</div>
-                    <div class="text-xs text-text-medium">Разработчик</div>
-                  </div>
-                </div>
-              </td>
-              <td class="px-4 py-3 text-sm">Начинающий</td>
-              <td class="px-4 py-3 text-sm">5</td>
-              <td class="px-4 py-3 font-medium text-primary-600">450</td>
-            </tr>
-            <tr class="border-b hover:bg-gray-50 transition">
-              <td class="px-4 py-3 text-sm">4</td>
-              <td class="px-4 py-3">
-                <div class="flex items-center">
-                  <div class="w-8 h-8 rounded-full bg-green-100 mr-3"></div>
-                  <div>
-                    <div class="font-medium">Сидоров Алексей</div>
-                    <div class="text-xs text-text-medium">Аналитик</div>
-                  </div>
-                </div>
-              </td>
-              <td class="px-4 py-3 text-sm">Начинающий</td>
-              <td class="px-4 py-3 text-sm">3</td>
-              <td class="px-4 py-3 font-medium text-primary-600">320</td>
-            </tr>
-            <tr class="hover:bg-gray-50 transition">
-              <td class="px-4 py-3 text-sm">5</td>
-              <td class="px-4 py-3">
-                <div class="flex items-center">
-                  <div class="w-8 h-8 rounded-full bg-purple-100 mr-3"></div>
-                  <div>
-                    <div class="font-medium">Козлова Мария</div>
-                    <div class="text-xs text-text-medium">Менеджер</div>
-                  </div>
-                </div>
-              </td>
-              <td class="px-4 py-3 text-sm">Начинающий</td>
-              <td class="px-4 py-3 text-sm">2</td>
-              <td class="px-4 py-3 font-medium text-primary-600">220</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
+import api from '@/services/api';
+
 export default {
-  name: 'AchievementsPage'
+  name: 'AchievementsPage',
+  data() {
+    return {
+      achievements: []
+    }
+  },
+  async created() {
+    this.achievements = await api.getAchievements();
+  }
 }
 </script>
-
-<style scoped>
-.progress-animation {
-  animation: progressGrow 2s ease-out forwards;
-}
-
-@keyframes progressGrow {
-  from {
-    width: 0;
-  }
-  to {
-    width: 30%;
-  }
-}
-</style> 

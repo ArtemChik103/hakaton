@@ -1,51 +1,52 @@
-from rest_framework import generics, status
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .parsers import parse_external_it_events
 
-# Временные заглушки для классов представлений
-# В реальном проекте здесь должна быть полноценная реализация
-
-class EventListView(generics.ListAPIView):
+class EventListView(APIView):
+    """
+    Возвращает список актуальных парсируемых IT-мероприятий и хакатонов
+    с прямыми ссылками на внешнюю регистрацию.
+    """
     def get(self, request, *args, **kwargs):
-        return Response({"message": "Event list endpoint"})
+        events = parse_external_it_events()
+        # Преобразуем датавремя в ISO-строки для REST API
+        formatted_events = []
+        for idx, item in enumerate(events, 1):
+            formatted_events.append({
+                "id": idx,
+                "title": item["title"],
+                "description": item["description"],
+                "type": item["event_type"],
+                "format": item["format"],
+                "city": item["city"],
+                "location": item["location"],
+                "startDate": item["start_date"].isoformat() if hasattr(item["start_date"], 'isoformat') else str(item["start_date"]),
+                "prizePool": item["prize_pool"],
+                "organizer": item["organizer"],
+                "registrationLink": item["registration_link"],
+                "sourceSite": item["source_site"],
+                "isLiveParsed": True
+            })
+        return Response(formatted_events, status=status.HTTP_200_OK)
 
-class EventDetailView(generics.RetrieveAPIView):
-    def get(self, request, *args, **kwargs):
-        return Response({"message": "Event detail endpoint"})
-
-class EventCreateView(generics.CreateAPIView):
-    def post(self, request, *args, **kwargs):
-        return Response({"message": "Event create endpoint"})
-
-class EventUpdateView(generics.UpdateAPIView):
-    def put(self, request, *args, **kwargs):
-        return Response({"message": "Event update endpoint"})
-
-class EventDeleteView(generics.DestroyAPIView):
-    def delete(self, request, *args, **kwargs):
-        return Response({"message": "Event delete endpoint"})
-
-class EventRegisterView(APIView):
-    def post(self, request, *args, **kwargs):
-        return Response({"message": "Event register endpoint"})
-
-class EventCheckInView(APIView):
-    def post(self, request, *args, **kwargs):
-        return Response({"message": "Event check-in endpoint"})
-
-class EventReviewCreateView(generics.CreateAPIView):
-    def post(self, request, *args, **kwargs):
-        return Response({"message": "Event review endpoint"})
-
-class UserEventsView(generics.ListAPIView):
-    def get(self, request, *args, **kwargs):
-        return Response({"message": "User events endpoint"})
-
-class EventCategoryListView(generics.ListAPIView):
-    def get(self, request, *args, **kwargs):
-        return Response({"message": "Event categories endpoint"})
-
-class EventTagListView(generics.ListAPIView):
-    def get(self, request, *args, **kwargs):
-        return Response({"message": "Event tags endpoint"}) 
+class EventDetailView(APIView):
+    def get(self, request, pk, *args, **kwargs):
+        events = parse_external_it_events()
+        if 1 <= pk <= len(events):
+            item = events[pk - 1]
+            return Response({
+                "id": pk,
+                "title": item["title"],
+                "description": item["description"],
+                "type": item["event_type"],
+                "format": item["format"],
+                "city": item["city"],
+                "location": item["location"],
+                "startDate": item["start_date"].isoformat() if hasattr(item["start_date"], 'isoformat') else str(item["start_date"]),
+                "prizePool": item["prize_pool"],
+                "organizer": item["organizer"],
+                "registrationLink": item["registration_link"],
+                "sourceSite": item["source_site"]
+            })
+        return Response({"detail": "Not found"}, status=status.HTTP_404_NOT_FOUND)
